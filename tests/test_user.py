@@ -107,3 +107,9 @@ def test_get_user_with_not_existing_username():
     get_user.should_have_status_code(404)
     get_user.should_have_body_field("code", 1)
     get_user.should_have_body_field("message", "User not found")
+
+
+def test_delete_user_with_not_existing_username():
+
+    delete_user = User().delete_user("21312312312qwe213")
+    delete_user.should_have_status_code(404)
