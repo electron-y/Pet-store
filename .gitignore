@@ -1,0 +1,12 @@
+*.pyc
+.idea/
+*.log
+venv/
+.pytest_cache
+*.pytest_cache
+allure-report/
+allure_result/
+allure_results/
+*.html
+*.zip
+*.css
