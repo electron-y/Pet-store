@@ -3,9 +3,9 @@ import pytest
 from src.wrappers.store import Store
 
 
-def test_place_find_delete_order():
+def test_place_find_delete_order(delete_order):
 
-    payload = {
+    payload_create_order = {
         "id": 123,
         "petId": 1111,
         "quantity": 1,
@@ -13,21 +13,16 @@ def test_place_find_delete_order():
         "status": "placed"
     }
 
-    place_order = Store().post_order(payload)
+    place_order = Store().post_order(payload_create_order)
     place_order.should_have_status_code(200)
-    place_order.should_have_body_field("id", payload["id"])
-    place_order.should_have_body_field("petId", payload["petId"])
-    place_order.should_have_body_field("quantity", payload["quantity"])
-    place_order.should_have_body_field("status", payload["status"])
+    place_order.should_have_body_field("id", payload_create_order["id"])
+    place_order.should_have_body_field("petId", payload_create_order["petId"])
+    place_order.should_have_body_field("quantity", payload_create_order["quantity"])
+    place_order.should_have_body_field("status", payload_create_order["status"])
 
-    find_order_by_id = Store().get_order(payload["id"])
+    find_order_by_id = Store().get_order(payload_create_order["id"])
     find_order_by_id.should_have_status_code(200)
-    find_order_by_id.should_have_body_field("id", payload["id"])
-    find_order_by_id.should_have_body_field("petId", payload["petId"])
-    find_order_by_id.should_have_body_field("quantity", payload["quantity"])
-    find_order_by_id.should_have_body_field("status", payload["status"])
-
-    delete_order_by_id = Store().delete_order(payload["id"])
-    delete_order_by_id.should_have_status_code(200)
-    delete_order_by_id.should_have_body_field("code", 200)
-    delete_order_by_id.should_have_body_field("message", str(payload["id"]))
+    find_order_by_id.should_have_body_field("id", payload_create_order["id"])
+    find_order_by_id.should_have_body_field("petId", payload_create_order["petId"])
+    find_order_by_id.should_have_body_field("quantity", payload_create_order["quantity"])
+    find_order_by_id.should_have_body_field("status", payload_create_order["status"])
