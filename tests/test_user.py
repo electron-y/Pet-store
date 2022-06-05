@@ -3,22 +3,9 @@ import pytest
 from src.wrappers.user import User
 
 
-def test_user():
-
-    create_payload = {
+update_payload = {
         "id": 112233,
         "username": "Johnny",
-        "firstName": "John",
-        "lastName": "Smith",
-        "email": "john228@gmail.com",
-        "password": "Johnny228",
-        "phone": "380777777777",
-        "userStatus": 0
-    }
-
-    update_payload = {
-        "id": 112233,
-        "username": "Johnny_update",
         "firstName": "John_update",
         "lastName": "Smith_update",
         "email": "john228_update@gmail.com",
@@ -27,19 +14,18 @@ def test_user():
         "userStatus": 0
     }
 
-    params = {"username": "Johnny", "password": "Johnny228"}
 
-    create_user = User().post_user(create_payload)
-    create_user.should_have_status_code(200)
-    create_user.should_have_body_field("code", 200)
-    create_user.should_have_body_field("message", str(create_payload["id"]))
+def test_logout_user(login_user):
 
-    login_user = User().get_login_user(params)
-    login_user.should_have_status_code(200)
-    login_user.should_have_body_field("code", 200)
-    login_user.does_str_in_value("message", "logged in user session:")
+    logout_user = User().get_logout_user()
+    logout_user.should_have_status_code(200)
+    logout_user.should_have_body_field("code", 200)
+    logout_user.should_have_body_field("message", "ok")
 
-    update_user = User().put_user(create_payload["username"], update_payload)
+
+def test_update_user_and_get(create_user, delete_user):
+
+    update_user = User().put_user(update_payload["username"], update_payload)
     update_user.should_have_status_code(200)
     update_user.should_have_body_field("code", 200)
     update_user.should_have_body_field("message", str(update_payload["id"]))
@@ -53,16 +39,6 @@ def test_user():
     get_user_by_username.should_have_body_field("email", update_payload["email"])
     get_user_by_username.should_have_body_field("password", update_payload["password"])
     get_user_by_username.should_have_body_field("phone", update_payload["phone"])
-
-    delete_user = User().delete_user(update_payload["username"])
-    delete_user.should_have_status_code(200)
-    delete_user.should_have_body_field("code", 200)
-    delete_user.should_have_body_field("message", str(update_payload["username"]))
-
-    logout_user = User().get_logout_user()
-    logout_user.should_have_status_code(200)
-    logout_user.should_have_body_field("code", 200)
-    logout_user.should_have_body_field("message", "ok")
 
 
 def test_create_list_of_users():
