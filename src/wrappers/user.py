@@ -17,11 +17,6 @@ class User:
         response = requests.get(url=url)
         return AssertableResponse(response)
 
-    def get_login_user(self, params):
-        url = self.url + "user/login"
-        response = requests.get(url=url, params=params)
-        return AssertableResponse(response)
-
     def get_logout_user(self):
         url = self.url + "user/logout"
         response = requests.get(url=url)
