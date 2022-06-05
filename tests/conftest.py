@@ -91,29 +91,15 @@ def login_user():
     login_user.does_str_in_value("message", "logged in user session:")
 
 
-payload_create_order = {
+@pytest.fixture()
+def delete_order():
+    payload_create_order = {
         "id": 123,
         "petId": 1111,
         "quantity": 1,
         "shipDate": "2022-05-16T13:32:37.914+0000",
         "status": "placed"
     }
-
-
-@pytest.fixture()
-def place_order():
-
-    place_order = Store().post_order(payload_create_order)
-    place_order.should_have_status_code(200)
-    place_order.should_have_body_field("id", payload_create_order["id"])
-    place_order.should_have_body_field("petId", payload_create_order["petId"])
-    place_order.should_have_body_field("quantity", payload_create_order["quantity"])
-    place_order.should_have_body_field("status", payload_create_order["status"])
-    return place_order.get_value("")
-
-
-@pytest.fixture()
-def delete_order():
 
     yield
 
