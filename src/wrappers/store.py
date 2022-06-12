@@ -17,6 +17,11 @@ class Store:
         response = requests.get(url=url)
         return AssertableResponse(response)
 
+    def get_inventory(self):
+        url = self.url + "store/inventory"
+        response = requests.get(url=url)
+        return AssertableResponse(response)
+
     def post_order(self, payload):
         url = self.url + "store/order/"
         response = requests.post(url=url, data=json.dumps(payload), headers=self.headers)
