@@ -4,6 +4,7 @@ from src.wrappers.pet import Pet
 
 
 payload_create_pet = {
+    "available": {
         "id": 1212,
         "category": {
             "id": 1,
@@ -20,7 +21,46 @@ payload_create_pet = {
             }
         ],
         "status": "available"
+    },
+
+    "pending": {
+        "id": 1212,
+        "category": {
+            "id": 1,
+            "name": "Cat"
+        },
+        "name": "Mikasa",
+        "photoUrls": [
+            "string"
+        ],
+        "tags": [
+            {
+                "id": 0,
+                "name": "string"
+            }
+        ],
+        "status": "pending"
+    },
+
+    "sold": {
+        "id": 1212,
+        "category": {
+            "id": 1,
+            "name": "Cat"
+        },
+        "name": "Mikasa",
+        "photoUrls": [
+            "string"
+        ],
+        "tags": [
+            {
+                "id": 0,
+                "name": "string"
+            }
+        ],
+        "status": "sold"
     }
+}
 
 payload_update_pet = {
         "id": 1212,
@@ -42,22 +82,22 @@ payload_update_pet = {
     }
 
 
-def test_create_pet():
+def test_create_pet(delete_pet):
 
-    add_new_pet = Pet().post_new_pet(payload_create_pet)
+    add_new_pet = Pet().post_new_pet(payload_create_pet["available"])
     add_new_pet.should_have_status_code(200)
-    add_new_pet.should_have_body_field("id", payload_create_pet["id"])
-    add_new_pet.should_have_body_field("category", payload_create_pet["category"])
-    add_new_pet.should_have_body_field("name", payload_create_pet["name"])
-    add_new_pet.should_have_body_field("status", payload_create_pet["status"])
+    add_new_pet.should_have_body_field("id", payload_create_pet["available"]["id"])
+    add_new_pet.should_have_body_field("category", payload_create_pet["available"]["category"])
+    add_new_pet.should_have_body_field("name", payload_create_pet["available"]["name"])
+    add_new_pet.should_have_body_field("status", payload_create_pet["available"]["status"])
 
 
-def test_delete_pet():
+def test_delete_pet(add_pet):
 
-    delete_pet = Pet().delete_pet(payload_create_pet["id"])
+    delete_pet = Pet().delete_pet(payload_create_pet["available"]["id"])
     delete_pet.should_have_status_code(200)
     delete_pet.should_have_body_field("code", 200)
-    delete_pet.should_have_body_field("message", str(payload_create_pet["id"]))
+    delete_pet.should_have_body_field("message", str(payload_create_pet["available"]["id"]))
 
 
 def test_update_existing_pet(add_pet, delete_pet):
@@ -77,13 +117,31 @@ def test_update_existing_pet(add_pet, delete_pet):
     get_pet_by_id.should_have_body_field("status", payload_update_pet["status"])
 
 
-@pytest.mark.parametrize("status", ['available', 'pending', 'sold'])
-def test_get_pets_by_status(status):
+@pytest.mark.parametrize("status, payload", [('available', payload_create_pet["available"]),
+                                             ('pending', payload_create_pet["pending"]),
+                                             ('sold', payload_create_pet["sold"])])
+def test_get_pets_by_status(status, payload):
 
     params = {"status": status}
 
+    add_pet = Pet().post_new_pet(payload)
+    add_pet.should_have_status_code(200)
+    add_pet.should_have_body_field("id", payload["id"])
+    add_pet.should_have_body_field("category", payload["category"])
+    add_pet.should_have_body_field("name", payload["name"])
+    add_pet.should_have_body_field("status", payload["status"])
+
     get_pets_by_status = Pet().get_pets_by_status(params)
     get_pets_by_status.should_have_status_code(200)
+    get_pets_by_status.should_have_body_field("id", payload["id"])
+    get_pets_by_status.should_have_body_field("category", payload["category"])
+    get_pets_by_status.should_have_body_field("name", payload["name"])
+    get_pets_by_status.should_have_body_field("status", payload["status"])
+
+    delete_pet = Pet().delete_pet(payload["id"])
+    delete_pet.should_have_status_code(200)
+    delete_pet.should_have_body_field("code", 200)
+    delete_pet.should_have_body_field("message", str(payload["id"]))
 
 
 def test_update_existing_pet_with_new_form_data(add_pet, delete_pet):
