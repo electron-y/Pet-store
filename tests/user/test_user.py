@@ -25,7 +25,7 @@ update_payload = {
     }
 
 
-def test_create_user():
+def test_create_user(delete_user):
 
     create_user = User().post_user(payload_create_user)
     create_user.should_have_status_code(200)
@@ -33,7 +33,7 @@ def test_create_user():
     create_user.should_have_body_field("message", str(payload_create_user["id"]))
 
 
-def test_delete_user():
+def test_delete_user(create_user):
 
     delete_user = User().delete_user(payload_create_user["username"])
     delete_user.should_have_status_code(200)
