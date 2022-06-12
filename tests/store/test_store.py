@@ -3,15 +3,16 @@ import pytest
 from src.wrappers.store import Store
 
 
-def test_place_find_delete_order(delete_order):
-
-    payload_create_order = {
+payload_create_order = {
         "id": 123,
         "petId": 1111,
         "quantity": 1,
         "shipDate": "2022-05-16T13:32:37.914+0000",
         "status": "placed"
     }
+
+
+def test_place_order(delete_order):
 
     place_order = Store().post_order(payload_create_order)
     place_order.should_have_status_code(200)
@@ -26,3 +27,11 @@ def test_place_find_delete_order(delete_order):
     find_order_by_id.should_have_body_field("petId", payload_create_order["petId"])
     find_order_by_id.should_have_body_field("quantity", payload_create_order["quantity"])
     find_order_by_id.should_have_body_field("status", payload_create_order["status"])
+
+
+def test_delete_order(place_order):
+
+    delete_order_by_id = Store().delete_order(payload_create_order["id"])
+    delete_order_by_id.should_have_status_code(200)
+    delete_order_by_id.should_have_body_field("code", 200)
+    delete_order_by_id.should_have_body_field("message", str(payload_create_order["id"]))

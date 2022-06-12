@@ -3,6 +3,25 @@ import pytest
 from src.wrappers.pet import Pet
 
 
+payload_create_pet = {
+        "id": 1212,
+        "category": {
+            "id": 1,
+            "name": "Cat"
+        },
+        "name": "Mikasa",
+        "photoUrls": [
+            "string"
+        ],
+        "tags": [
+            {
+                "id": 0,
+                "name": "string"
+            }
+        ],
+        "status": "available"
+    }
+
 payload_update_pet = {
         "id": 1212,
         "category": {
@@ -23,7 +42,25 @@ payload_update_pet = {
     }
 
 
-def test_update_existing_pet_and_get(add_pet, delete_pet):
+def test_create_pet():
+
+    add_new_pet = Pet().post_new_pet(payload_create_pet)
+    add_new_pet.should_have_status_code(200)
+    add_new_pet.should_have_body_field("id", payload_create_pet["id"])
+    add_new_pet.should_have_body_field("category", payload_create_pet["category"])
+    add_new_pet.should_have_body_field("name", payload_create_pet["name"])
+    add_new_pet.should_have_body_field("status", payload_create_pet["status"])
+
+
+def test_delete_pet():
+
+    delete_pet = Pet().delete_pet(payload_create_pet["id"])
+    delete_pet.should_have_status_code(200)
+    delete_pet.should_have_body_field("code", 200)
+    delete_pet.should_have_body_field("message", str(payload_create_pet["id"]))
+
+
+def test_update_existing_pet(add_pet, delete_pet):
 
     update_existing_pet = Pet().put_existing_pet(payload_update_pet)
     update_existing_pet.should_have_status_code(200)
@@ -49,7 +86,7 @@ def test_get_pets_by_status(status):
     get_pets_by_status.should_have_status_code(200)
 
 
-def test_update_existing_pet_with_new_form_data_and_get_pet(add_pet, delete_pet):
+def test_update_existing_pet_with_new_form_data(add_pet, delete_pet):
 
     params = {"name": "Bonny1", "status": "sold"}
 
