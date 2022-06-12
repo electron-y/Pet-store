@@ -19,3 +19,6 @@ class AssertableResponse:
 
     def does_str_in_value(self, field_name, field_value):
         assert self.condition.does_str_in_value(field_name, field_value)
+
+    def get_value(self, key):
+        return self.condition.get_params_request(key)
