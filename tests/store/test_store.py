@@ -35,3 +35,9 @@ def test_delete_order(place_order):
     delete_order_by_id.should_have_status_code(200)
     delete_order_by_id.should_have_body_field("code", 200)
     delete_order_by_id.should_have_body_field("message", str(payload_create_order["id"]))
+
+
+def test_get_inventory():
+
+    get_inventory = Store().get_inventory()
+    get_inventory.should_have_status_code(200)
