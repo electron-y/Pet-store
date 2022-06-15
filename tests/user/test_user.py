@@ -2,6 +2,7 @@ import pytest
 
 from src.wrappers.user import User
 
+
 payload_create_user = {
         "id": 112233,
         "username": "Johnny",
