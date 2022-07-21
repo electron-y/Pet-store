@@ -12,6 +12,7 @@ payload_create_order = {
     }
 
 
+@pytest.mark.smoke
 def test_place_order(delete_order):
 
     place_order = Store().post_order(payload_create_order)
@@ -29,6 +30,7 @@ def test_place_order(delete_order):
     find_order_by_id.should_have_body_field("status", payload_create_order["status"])
 
 
+@pytest.mark.smoke
 def test_delete_order(place_order):
 
     delete_order_by_id = Store().delete_order(payload_create_order["id"])

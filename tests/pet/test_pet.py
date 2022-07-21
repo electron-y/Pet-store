@@ -82,6 +82,7 @@ payload_update_pet = {
     }
 
 
+@pytest.mark.smoke
 def test_create_pet(delete_pet):
 
     add_new_pet = Pet().post_new_pet(payload_create_pet["available"])
@@ -92,6 +93,7 @@ def test_create_pet(delete_pet):
     add_new_pet.should_have_body_field("status", payload_create_pet["available"]["status"])
 
 
+@pytest.mark.smoke
 def test_delete_pet(add_pet):
 
     delete_pet = Pet().delete_pet(payload_create_pet["available"]["id"])
@@ -100,6 +102,7 @@ def test_delete_pet(add_pet):
     delete_pet.should_have_body_field("message", str(payload_create_pet["available"]["id"]))
 
 
+@pytest.mark.smoke
 def test_update_existing_pet(add_pet, delete_pet):
 
     update_existing_pet = Pet().put_existing_pet(payload_update_pet)

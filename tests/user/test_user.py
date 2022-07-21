@@ -26,6 +26,7 @@ update_payload = {
     }
 
 
+@pytest.mark.smoke
 def test_create_user(delete_user):
 
     create_user = User().post_user(payload_create_user)
@@ -34,6 +35,7 @@ def test_create_user(delete_user):
     create_user.should_have_body_field("message", str(payload_create_user["id"]))
 
 
+@pytest.mark.smoke
 def test_delete_user(create_user):
 
     delete_user = User().delete_user(payload_create_user["username"])
@@ -42,6 +44,7 @@ def test_delete_user(create_user):
     delete_user.should_have_body_field("message", str(payload_create_user["username"]))
 
 
+@pytest.mark.smoke
 def test_update_user(create_user, delete_user):
 
     update_user = User().put_user(update_payload["username"], update_payload)
